@@ -3,14 +3,10 @@
 // (powered by FernFlower decompiler)
 //
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
 
 public class Field {
     private final ArrayList<Object> objects;
@@ -20,7 +16,7 @@ public class Field {
     public Field(int width, int height) {
         this.width = width;
         this.height = height;
-        this.objects = new ArrayList();
+        this.objects = new ArrayList<>();
     }
 
     public void generateObjects() {
@@ -58,30 +54,19 @@ public class Field {
     private Color getRandomColor() {
         Random rand = new Random();
         int colorNum = rand.nextInt(5);
-        Color var10000;
-        switch (colorNum) {
-            case 0:
-                var10000 = Color.RED;
-                break;
-            case 1:
-                var10000 = Color.BLUE;
-                break;
-            case 2:
-                var10000 = Color.GREEN;
-                break;
-            case 3:
-                var10000 = new Color(128, 0, 128);
-                break;
-            default:
-                var10000 = Color.YELLOW;
-        }
 
-        return var10000;
+        return switch (colorNum) {
+            case 0 -> Color.RED;
+            case 1 -> Color.BLUE;
+            case 2 -> Color.GREEN;
+            case 3 -> new Color(128, 0, 128);
+            default -> Color.YELLOW;
+        };
     }
 
     public void moveObjects() {
         for(int i = 0; i < this.objects.size(); ++i) {
-            Object object = (Object)this.objects.get(i);
+            Object object = this.objects.get(i);
             object.move();
             if (object.getX() < 0 || object.getX() > this.width - 30) {
                 object.setVX(-object.getVX());
@@ -92,7 +77,7 @@ public class Field {
             }
 
             for(int j = i + 1; j < this.objects.size(); ++j) {
-                Object other = (Object)this.objects.get(j);
+                Object other = this.objects.get(j);
                 if (object.getX() < other.getX() + 30 && object.getX() + 30 > other.getX() && object.getY() < other.getY() + 30 && object.getY() + 30 > other.getY()) {
                     this.interact(object, other);
                 }
@@ -107,9 +92,9 @@ public class Field {
         if (color1.equals(color2)) {
             this.reproduce(object, other);
         } else if ((!color1.equals(Color.RED) || !color2.equals(Color.BLUE)) && (!color1.equals(Color.BLUE) || !color2.equals(Color.GREEN)) && (!color1.equals(Color.GREEN) || !color2.equals(new Color(128, 0, 128))) && (!color1.equals(new Color(128, 0, 128)) || !color2.equals(Color.YELLOW)) && (!color1.equals(Color.YELLOW) || !color2.equals(Color.RED))) {
-            this.kill(other, object);
+            this.kill(object);
         } else {
-            this.kill(object, other);
+            this.kill(other);
         }
 
     }
@@ -143,17 +128,15 @@ public class Field {
         this.objects.add(newObject);
     }
 
-    private void kill(Object object, Object other) {
+    private void kill(Object other) {
         this.objects.remove(other);
     }
 
     public void draw(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.width, this.height);
-        Iterator var2 = this.objects.iterator();
 
-        while(var2.hasNext()) {
-            Object object = (Object)var2.next();
+        for (Object object : this.objects) {
             object.draw(g);
         }
 
@@ -165,30 +148,30 @@ public class Field {
 
     void endGame() {
         if (this.objects.size() == 1) {
-            Color color = ((Object)this.objects.get(0)).getColor();
+            Color color = this.objects.get(0).getColor();
             new ImageIcon();
             String colors;
             ImageIcon colorImage;
             if (color == Color.RED) {
                 colors = "RED";
                 colorImage = new ImageIcon("/Users/ian/Downloads/red (1).png");
-                JOptionPane.showMessageDialog((Component)null, colors + " is the Winner!", "WINNER", 1, colorImage);
+                JOptionPane.showMessageDialog(null, colors + " is the Winner!", "WINNER", JOptionPane.INFORMATION_MESSAGE, colorImage);
             } else if (color == Color.BLUE) {
                 colors = "BLUE";
                 colorImage = new ImageIcon("/Users/ian/Downloads/blue (1).png");
-                JOptionPane.showMessageDialog((Component)null, colors + " is the Winner!", "WINNER", 1, colorImage);
+                JOptionPane.showMessageDialog(null, colors + " is the Winner!", "WINNER", JOptionPane.INFORMATION_MESSAGE, colorImage);
             } else if (color == Color.GREEN) {
                 colors = "GREEN";
                 colorImage = new ImageIcon("/Users/ian/Downloads/green (1).png");
-                JOptionPane.showMessageDialog((Component)null, colors + " is the Winner!", "WINNER", 1, colorImage);
+                JOptionPane.showMessageDialog(null, colors + " is the Winner!", "WINNER", JOptionPane.INFORMATION_MESSAGE, colorImage);
             } else if (color == Color.YELLOW) {
                 colors = "YELLOW";
                 colorImage = new ImageIcon("/Users/ian/Downloads/yellow (1).png");
-                JOptionPane.showMessageDialog((Component)null, colors + " is the Winner!", "WINNER", 1, colorImage);
+                JOptionPane.showMessageDialog(null, colors + " is the Winner!", "WINNER", JOptionPane.INFORMATION_MESSAGE, colorImage);
             } else {
                 colors = "PURPLE";
                 colorImage = new ImageIcon("/Users/ian/Downloads/purple (1).png");
-                JOptionPane.showMessageDialog((Component)null, colors + " is the Winner!", "WINNER", 1, colorImage);
+                JOptionPane.showMessageDialog(null, colors + " is the Winner!", "WINNER", JOptionPane.INFORMATION_MESSAGE, colorImage);
             }
 
             System.exit(0);
